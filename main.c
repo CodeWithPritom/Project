@@ -5,7 +5,7 @@
 
 //Login is Created by CodeWithPritom
 
-int login()
+int login() //Member 1 : Login
 {
     printf("Welcome to Mini Terminal OS Simulator\n");
 
@@ -29,24 +29,26 @@ int login()
         printf("Please Enter Correct Credential\n");
         return 0;
     }
-    
+
 }
 
-//Member 1 : Logic File Explorer
+
+
+//Member 2 : Logic File Explorer
 
 void file_exp()
 {
 
 }
 
-//Member 2 : Note Pad Integration
+//Member 3 : Note Pad Integration
 
 void note_pad()
 {
 
 }
 
-//Member 3 : Student Database Integration
+//Member 4 : Student Database Integration
 
 void stu_data()
 {
@@ -54,6 +56,13 @@ void stu_data()
 }
 
 
+
+void SysInfo() // Member 1
+{
+    printf("=== System Information ===\n");
+    system("systeminfo");   // Windows command to print system info
+
+}
 
 // Main is Create by CodeWithPritom
 
@@ -72,6 +81,7 @@ int main()
         printf("1. File Explorer\n");   // Member 2
         printf("2. Note Pad\n");    // Member 3
         printf("3. Student Database\n"); // Member 4
+        printf("4. System Information\n");
         printf("0. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &option);
@@ -81,7 +91,8 @@ int main()
             case 1 : file_exp();
             case 2 : note_pad();
             case 3 : stu_data();
-            default : 
+            case 4 : SysInfo();
+            default :
             if(option < 0 || option > 3)
             {
             printf("\nPlease Enter Valid Choice! or ShutDown me!\n");
