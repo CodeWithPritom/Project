@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -6,6 +5,32 @@
 #include <windows.h>  // For systeminfo command
 #include <time.h>
 
+// Login System
+int login();
+void art();
+
+// File Explorer
+int file_exp();
+void logfiles(char *filename);
+void write_file();
+void read_file();
+void append_file();
+void filelist();
+void searchfile();
+
+// Note Pad (optional if separate from File Explorer)
+void note_pad();
+
+// Student Database
+int stu_data();
+void add_student();
+void view_student();
+void search_student();
+
+// System Information / Time
+void SysTime();
+void ShowTime();
+void SysInfo();
 
 void art()
 {
@@ -115,9 +140,6 @@ int login() //Member 1 : Login
 
 #define log "file_list.txt"
 
-
-int file_exp()
-{
     //Function Prototypes
     void logfiles(char *filename)
     {
@@ -129,13 +151,45 @@ int file_exp()
 
     }
 
+    void update_logfiles(char *filename) // Added by Pritom Bhowmik
+    {
+        FILE *filelist = fopen(log, "r");
+        FILE *temp = fopen("temp.txt", "w");
+        char line[256];
+
+        if (filelist == NULL || temp == NULL) {
+            printf("Error opening file!\n");
+            return;
+        }
+
+     while(fgets(line,sizeof(line),filelist)) {
+    
+        strtok(line, "\n");
+
+        if(strcmp(line, filename) != 0) { 
+            fprintf(temp, "%s\n", line); // keep only unmatched lines
+        }
+    }
+
+        fclose(filelist);
+        fclose(temp);
+
+        // Replace original log file with updated temp file
+        remove(log);
+        rename("temp.txt", log);
+    }
+
+int file_exp()
+{
+
+
 
     void writefile()
     {
         FILE *file;
 
 
-        int ch, count=0;
+        int ch, count = 0;
         char filename[10], text[100];
 
         /*
@@ -196,14 +250,26 @@ int file_exp()
 
 
     }
-    void readfile()
-    {
 
-    }
-    void appendfile()
-    {
 
+// File Detele feature made by Saim
+
+    void file_dlt(){
+    char filename[100];
+    printf("Enter filename to delete : ");
+    scanf("%s",filename);
+    if( remove(filename) == 0)   // remove function diye delete kora// 0 mane kaj hoyeche
+    {
+    printf("File has been deleted *_* \n");
+
+    update_logfiles(filename); // log file thekeo delete hobe added by Pritom Bhowmik
     }
+    else{
+    printf("Couldn't delete file. Maybe its non-existing \n");
+    }
+
+}
+    
     void filelist()
     {
         FILE *listfile;
@@ -231,8 +297,41 @@ int file_exp()
         printf("\n==== List End ====\n");
 
     }
-    void deletefile()
+    void searchfile()
     {
+        char keyword[100];
+        char filename[100]; // filename in log file
+        int found = 0;
+
+        printf("\nEnter file name to search: \n");
+        getchar(); // consume leftover newline
+        fgets(keyword, sizeof(keyword), stdin);
+        strtok(keyword,"\n");
+
+        FILE *file = fopen(log, "r");
+        if (file == NULL) {
+            printf("File not found!\n");
+            return;
+        }  
+
+        while(fgets(filename, sizeof(filename), file) != NULL)
+        
+        {
+            strtok(filename,"\n");
+
+            if(strcmp(filename, keyword) == 0)
+            {
+                printf("File found: %s\n", filename);
+                found = 1;
+                break;
+            }
+        }
+
+        if(!found) {
+            printf("File with name %s not found.\n", keyword);
+        }
+
+        fclose(file);
 
     }
 
@@ -242,12 +341,13 @@ int file_exp()
     {
         //Menu
         printf("\n==== File Manager Menu ====\n");
-        printf("1. Create and Write File ( If input file and existing file same previous content will remove )\n");
+        printf("1. Trial Note Pad ( If input file and existing file same previous content will remove )\n");
         printf("2. Read File\n");
         printf("3. Add text in your existing file\n");
         printf("4. List of all files you created\n");
-        printf("5. Delete file\n");
-        printf("6. Exit\n");
+        printf("5. Search file\n");
+        printf("6. Delete file\n");
+        printf("7. Exit\n");
 
         printf("Enter Your Choice : \n");
         scanf("%d",&choice);
@@ -260,18 +360,21 @@ int file_exp()
             writefile();
             break;
         case 2 :
-            readfile();
+            read_file();
             break;
         case 3 :
-            appendfile();
+            append_file();
             break;
         case 4 :
             filelist();
             break;
         case 5 :
-            deletefile();
+            searchfile();
             break;
         case 6 :
+            file_dlt();
+            break;
+        case 7 :
             printf("\nAbar Asiben Dhonnobad\n");
 
             return 0;
@@ -285,12 +388,137 @@ int file_exp()
 }
 
 
-//Member 3 : Note Pad Integration
+//Ummay : Note Pad Integration
+
+
+
+
+
+
+void write_file()
+{
+            int choice;
+        char filename[50], ch;
+        FILE *fp;
+
+    printf("Enter File Name : ");
+    // getchar(); getchar(); remove by Pritom Bhowmik
+    scanf("%s", filename);
+
+    fp = fopen(filename, "w");
+
+    if(fp == NULL)
+    {
+        printf(" ERROR opening file\n");
+        return;
+    }
+    printf(" Start typing (press '~' and then enter to stop)\n");
+
+    while((ch = getchar()) != '~')
+    {
+        fputc(ch, fp);
+    }
+    fclose(fp);
+    printf("\n====Note saved====\n");
+    logfiles(filename);
+}
+
+void read_file()
+
+{
+            int choice;
+        char filename[50], ch;
+        FILE *fp;
+
+    printf("Enter the file name you want to open : ");
+    fgets(filename, sizeof(filename), stdin);
+    filename[strcspn(filename, "\n")] = 0;
+
+    fp = fopen(filename, "r");
+    if(fp == NULL)
+    {
+        printf("File not found\n");
+        return;
+    }
+
+
+    printf("\n==== File Content ====\n");
+   
+    while((ch = fgetc(fp)) != EOF)
+    {
+        putchar(ch);
+    }
+    fclose(fp);
+    printf("\n");
+    printf("\n==== End of File ====\n");
+    return;
+}
+
+void append_file()
+{
+            int choice;
+        char filename[50], ch;
+        FILE *fp;
+
+    printf("Enter the file name to append : ");
+    getchar();
+    fgets(filename, sizeof(filename), stdin);
+    filename[strcspn(filename, "\n")] = 0;
+
+    fp = fopen(filename, "a");
+    if(fp == NULL)
+    {
+        printf("File not found\n");
+        return;
+    }
+    printf("Append your text (press '~' and then enter to stop writing):\n");
+    getchar();
+    while((ch = getchar()) != '~')
+    {
+        fputc(ch, fp);
+    }
+    fclose(fp);
+    printf("\nYour note got updated\n");
+    return;
+
+}
 
 void note_pad()
 {
+            int choice;
+        char filename[50], ch;
+        FILE *fp;
 
-}
+    do
+    {
+        printf("\n==== Note Pad ====\n");
+        printf(" 1. Create a new note \n");
+        printf(" 2. Open your note \n");
+        printf(" 3. Append your note \n");
+        printf(" 4. Exit\n");
+
+        printf("Enter choice : ");
+        scanf("%d", &choice);
+        getchar(); // clear newline
+
+        switch(choice)
+        {
+        case 1 :
+            write_file(); break;
+        case 2 :
+            read_file(); break;
+        case 3 :
+            append_file(); break;
+        case 4:
+            printf("Exiting program...\n");
+            return;
+
+        default:
+            printf("Invalid choice \n");
+        }
+
+    } while(1);
+    }
 
 
 
@@ -303,6 +531,8 @@ void note_pad()
 //Munni : Student Database Integration
 
 // Testing and Debugging by Pritom Bhowmik
+
+// Search Functionalities by Pritom Bhowmik
 
    // ===== Student Database =====
 
@@ -317,6 +547,7 @@ void note_pad()
 
 void add_student();
 void view_student();
+void search_student();
 
 int stu_data(){
 
@@ -325,7 +556,7 @@ int stu_data(){
                 printf("\n==== Student Database =====\n");
 
             int choice2;
-            printf("\n1. Show details\n2. Add new\n3. Back\n");
+            printf("\n1. Show details\n2. Search Student\n3. Add new\n4. Exit\n");
             
             printf("\nEnter your choice : \n");
             scanf("%d", &choice2);
@@ -335,11 +566,13 @@ int stu_data(){
                     view_student();
                     break;
                 case 2:
+                    search_student();
+                    break;    
+                case 3:
                     add_student();
                     break;
-                case 3:
-                    printf("Back\n");
-                    break;
+                case 4:
+                    return 0;
                 default:
                     printf("Invalid choice!\n");
                     break;
@@ -455,6 +688,48 @@ void view_student() {
     fclose(file);
 }
 
+// This search function is created by Pritom Bhowmik
+
+void search_student() {
+    int search_id;
+    int found = 0;
+    char line[100];
+    FILE *file = fopen("students.txt", "r");
+
+    if (file == NULL) {
+        printf("File not found!\n");
+        return;
+    }
+
+    printf("Enter student ID to search: ");
+    scanf("%d", &search_id);
+
+    /*
+    // Skip header lines
+    fgets(line, sizeof(line), file);
+    fgets(line, sizeof(line), file);
+    */
+
+    // prottek line read korbe and check korbe id match kore kina
+
+    while (fgets(line, sizeof(line), file) != NULL) {
+        database std;
+        sscanf(line, "%d %s %f %f %s", &std.ID, std.name, &std.attendance, &std.avg_marks, std.grade); //sscanf string ney and parse kore
+        if (std.ID == search_id) {
+            printf("Student found:\n");
+            printf("ID: %d\nName: %s\nAttendance: %.2f%%\nAverage Marks: %.2f\nGrade: %s\n",
+                   std.ID, std.name, std.attendance, std.avg_marks, std.grade);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Student with ID %d not found.\n", search_id);
+    }
+
+    fclose(file);
+}
 
 void SysTime() // Added by Pritom Bhowmik
 {
@@ -548,6 +823,9 @@ int main()
     while(option != 0 );
 
     printf("\nGood Bye Sir... Miss You :')\n");
+    printf("\n");
+    printf("\nShutting down...\n");
+     Sleep(2000); // Pause for 2 seconds
     return 0;
 }
 
