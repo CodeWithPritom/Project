@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -17,48 +18,68 @@ int login() //Member 1 : Login
     char cPass[20];
     int isfound = 0;
 
-    printf("Enter User Name : ");
-    fgets(username, sizeof (username), stdin);
-    strtok(username,"\n");
 
-    //Username has no spaces.
-    if( strchr(username, ' ') != NULL) //strchr search a character in string
-    {
-        printf("Please do not use any space");
-        return 0;
-    }
 
-    printf("Enter Password : ");
-    scanf("%19s", password);
-
-    fp = fopen("user.txt","r");
-
-    //check user name and password credential
-    while(fscanf(fp, "%19s %19s", cUser, cPass)==2)
+    for(int i = 3; i > 0; i--)
     {
 
-        if(strcmp(username, cUser) == 0 && strcmp(password, cPass) == 0 )
+        printf("Enter User Name : ");
+
+        fgets(username, sizeof (username), stdin);
+        strtok(username,"\n");
+
+
+        printf("Enter Password : ");
+
+        fgets(password, sizeof (password), stdin);
+        strtok(password,"\n");
+
+
+        fp = fopen("user.txt","r");
+
+        //check user name and password credential
+
+
+        while(fscanf(fp, "%19s %19s", cUser, cPass)==2)
         {
-            isfound = 1;
-            break;
+
+            if(strcmp(username, cUser) == 0 && strcmp(password, cPass) == 0 )
+            {
+                isfound = 1;
+                break;
+            }
+        }
+
+        fclose(fp);
+
+        if(isfound)
+        {
+            printf("Welcome Sir....\n");
+            return 1;
+
+        }
+        else
+        {
+            if(i-1 > 0)
+            {
+                printf("\nIncorrect credentials. Try Again. You have %d attempt(s) left.\n", i-1);
+            }
+            else
+            {
+
+                printf("\nIncorrect credentials. No attempts left. Shutdown....\n");
+                return 0;
+            }
+
+            //Username has no spaces.
+            if( strchr(username, ' ') != NULL) //strchr search a character in string
+            {
+                printf("\nPlease do not use any space\n");
+            }
+
         }
     }
-
-    fclose(fp);
-
-    if(isfound)
-    {
-        printf("Welcome Sir....\n");
-        return 1;
-
-    }
-    else
-    {
-        printf("Please Enter Correct Credential\n");
-        return 0;
-    }
-
-
+    return 0;
 }
 
 
@@ -90,7 +111,16 @@ int file_exp()
 
 
         int ch, count=0;
-        char filename[100], text[1000];
+        char filename[10], text[100];
+
+        /*
+            char* text = (char*)malloc(maxsize * sizeof(char));
+        if(text == NULL)
+        {
+        printf("Memory allocation failed!\n");
+        return;
+        }
+        */
 
         printf("\nEnter File Name : ");
         getchar();
@@ -106,17 +136,35 @@ int file_exp()
         }
 
         printf("\nEnter text to write : \n");
+        getchar(); // consume leftover newline
 
         fgets(text, sizeof(text), stdin);
+        // fgets(text, maxsize, stdin);
         fputs(text, file);
-        
-        while(ch = fgetc(text) != EOF)
-        {
-            count++;
-        }
+
         fclose(file);
 
-        printf("\nData written successfully %d\n",count);
+        // Count characters
+        file = fopen(filename, "r");
+
+
+        count = strlen(text);  // count characters from text
+
+        if(count > 100)
+        {
+            //Warning Message
+            printf("\nYour file content : greater that 1000 character. You surpass your character limit\n");
+            fclose(file);
+            return;
+        }
+
+
+        //Promotional Message
+        printf("\nYour file content : %d character. Max Character Limit : %d . To increase character limit pay 100 BDT\n",count,sizeof(text));
+        fclose(file);
+
+
+        printf("\n===Data written successfully===\n");
 
         //filename go to logfiles() function
         logfiles(filename);
