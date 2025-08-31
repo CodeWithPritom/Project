@@ -1,116 +1,40 @@
-
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>  // For systeminfo command
-#include <time.h>
 
+//Login is Created by CodeWithPritom
 
-void art()
+int login()
 {
-
-    // Row 1
-    printf("_________  /\\      _____    |\\        /|            ____     _____\n");
-    // Row 2
-    printf("   |      /  \\    |         | \\      / |          /    \\   /     \n");
-    // Row 3
-    printf("   |     /____\\   |         |  \\    /  |         /      \\ |      \n");
-    // Row 4
-    printf("   |    /      \\  |____     |   \\  /   |         |      |  \\____\n");
-    // Row 5
-    printf("   |    |      |       |    |    \\/    |         |      |       \\\n");
-    // Row 6
-    printf("   |    |      |       |    |          |         \\      /        \\\n");
-    // Row 7
-    printf("   |    |      |  _____|    |          |          \\____/   _____/\n");
-
-}
-
-//Login is Created by Pritom Bhowmik
-
-int login() //Member 1 : Login
-{
-
-    art();
-    printf("\n");
-
-    FILE* fp;
+    printf("Welcome to Mini Terminal OS Simulator\n");
 
     char username[20];
     char password[20];
-    char cUser[20];
-    char cPass[20];
-    int isfound = 0;
+    char cUser[20] = "Rakib";
+    char cPass[20] = "123456";
 
+    printf("Enter User Name : ");
+    scanf("%19s", username);
+    printf("Enter Password : ");
+    scanf("%19s", password);
 
-
-    for(int i = 3; i > 0; i--)
+    if(strcmp(username, cUser) == 0 && strcmp(password, cPass) == 0 )
     {
-
-        printf("\nEnter User Name : ");
-
-        fgets(username, sizeof (username), stdin);
-        strtok(username,"\n");
-
-
-        printf("Enter Password : ");
-
-        fgets(password, sizeof (password), stdin);
-        strtok(password,"\n");
-
-
-        fp = fopen("user.txt","r");
-
-        //check user name and password credential
-
-
-        while(fscanf(fp, "%19s %19s", cUser, cPass)==2)
-        {
-
-            if(strcmp(username, cUser) == 0 && strcmp(password, cPass) == 0 )
-            {
-                isfound = 1;
-                break;
-            }
-        }
-
-        fclose(fp);
-
-        if(isfound)
-        {
-            printf("Welcome Sir....\n");
-            return 1;
-
-        }
-        else
-        {
-            if(i-1 > 0)
-            {
-                printf("\nIncorrect credentials. Try Again. You have %d attempt(s) left.\n", i-1);
-            }
-            else
-            {
-
-                printf("\nIncorrect credentials. No attempts left. Shutdown....\n");
-                return 0;
-            }
-
-            //Username has no spaces.
-            if( strchr(username, ' ') != NULL) //strchr search a character in string
-            {
-                printf("\nPlease do not use any space\n");
-            }
-
-        }
+        printf("Welcome Sir....\n");
+        return 1;
     }
-    return 0;
+    else
+    {
+        printf("Please Enter Correct Credential\n");
+        return 0;
+    }
+    
 }
 
 
 
-
-//Member 2 : Logic File Explorer
+//Member 1 : Logic File Explorer
 
 
 #define log "file_list.txt"
@@ -284,8 +208,7 @@ int file_exp()
     return 0;
 }
 
-
-//Member 3 : Note Pad Integration
+//Member 2 : Note Pad Integration
 
 void note_pad()
 {
@@ -299,10 +222,9 @@ void note_pad()
 
 
 
+//Member 3 : Student Database Integration
 
-//Munni : Student Database Integration
 
-// Testing and Debugging by Pritom Bhowmik
 
    // ===== Student Database =====
 
@@ -319,15 +241,19 @@ void add_student();
 void view_student();
 
 int stu_data(){
+    int choice1;
 
-    // Unnecessary Code remove and update by Pritom Bhowmik
+    printf("Enter your choice:\n");
+    printf("1. Student Database\n");
+    printf("2. Exit\n");
+    scanf("%d", &choice1);
 
-                printf("\n==== Student Database =====\n");
+    switch (choice1) {
+        case 1: {
+            printf("------ Student Database ------\n");
+            printf("Click:\n1. Show details\n2. Add new\n3. Back\n");
 
             int choice2;
-            printf("\n1. Show details\n2. Add new\n3. Back\n");
-            
-            printf("\nEnter your choice : \n");
             scanf("%d", &choice2);
 
             switch (choice2) {
@@ -342,17 +268,21 @@ int stu_data(){
                     break;
                 default:
                     printf("Invalid choice!\n");
-                    break;
             }
+            break;
+        }
+        case 2:
+            printf("Exit\n");
+            break;
+        default:
+            printf("Invalid choice!\n");
+    }
 
     return 0;
 }
 
-
 void add_student() {
-    
     int n;
-    
     printf("How many students data you want to store?\n");
     scanf("%d", &n);
     
@@ -383,17 +313,12 @@ void add_student() {
         int attended_class, sub_sum = 0;
 
         // id
-        printf("\nEnter ID of student :\n");
+        printf("Enter ID of student :\n");
         scanf("%d", &std[i].ID);
 
         // name
         printf("Enter name of student:\n");
-
-            getchar(); // to consume the newline character left by previous scanf (added by Pritom)
-
-        //scanf("%s", std[i].name); // This will not work for names with spaces
-        fgets(std[i].name, sizeof(std[i].name), stdin); // Pritom Bhowmik
-        strtok(std[i].name,"\n"); 
+        scanf("%s", std[i].name);
         
         // attendance
         printf("Attended classes of student :\n");
@@ -436,63 +361,26 @@ void add_student() {
 
             fprintf(file, "%-10d %-15s %-14.2f %-15.2f %-10s\n",std[i].ID, std[i].name, std[i].attendance, std[i].avg_marks, std[i].grade);
         }
-       printf("\nSir, Data added successfully!\n");
+
     fclose(file);
-
-    stu_data(); // Go back to student menu ( added by Pritom)
-
 }
 
 void view_student() {
     char data[100];
     FILE *file = fopen("students.txt", "r");
 
-    // fgets(data, 100, file); // read and ignore header line
-    while(fgets(data, 100, file) != NULL)  // read until end of file
-    {
+    fgets(data, 100, file);
     printf("%s", data);
-    }
-    fclose(file);
 }
 
 
-void SysTime() // Added by Pritom Bhowmik
-{
-    time_t now;
-    struct tm *t;
-    char buf[100];
-
-    time(&now);
-    t = localtime(&now);
-
-    strftime(buf, sizeof(buf)-1, "Current Date and Time: %Y-%m-%d %I:%M:%S", t);
-    printf("%s\n", buf);  
-    
-}
-
-void ShowTime() // Added by Pritom Bhowmik
-{
-    time_t now;
-    struct tm *t;
-    char buf[100];
-
-    time(&now);
-    t = localtime(&now);
-
-    strftime(buf, sizeof(buf)-1, "Clock: %I:%M:%S", t);
-    printf("%s\n", buf);  
-    
-}
 
 
-void SysInfo() // Created by Pritom Bhowmik
-{
-    printf("==== System Information ====\n");
-    system("systeminfo");   // Windows command to print system info
 
-}
 
-// Main is Create by Pritom Bhowmik
+
+
+// Main is Create by CodeWithPritom
 
 int main()
 {
@@ -505,47 +393,26 @@ int main()
 
     do
     {
-
-        printf("\nWelcome to Mini Terminal OS Simulator\n");
         printf("\n===== Main Menu =====\n");
-        printf("1. File Explorer\n");   // Created by Saim
-        printf("2. Note Pad\n");    // Created by Ummay
-        printf("3. Student Database\n"); // Created by Munni
-        printf("4. Date & Time\n"); // Created by Pritom Bhowmik
-        printf("5. System Information\n"); // Created by Pritom Bhowmik
-        printf("\n");
-                ShowTime();
-        printf("\n");
-        printf("0. Shutdown\n"); // Exit option added by Pritom Bhowmik
-        printf("\n");
-        printf("Enter choice: "); // Prompt added by Pritom Bhowmik
+        printf("1. File Explorer\n");   // Member 2
+        printf("2. Note Pad\n");    // Member 3
+        printf("3. Student Database\n"); // Member 4
+        printf("0. Exit\n");
+        printf("Enter choice: ");
         scanf("%d", &option);
 
         switch(option)
         {
-        case 1 :
-            file_exp();
-            break;
-        case 2 :
-            note_pad();
-            break;
-        case 3 :
-            stu_data();
-            break;
-        case 4 :
-            SysTime();
-            break;
-        case 5 :
-            SysInfo();
-            break;
-        default :
-            if(option < 0 || option > 4)
+            case 1 : file_exp();
+            case 2 : note_pad();
+            case 3 : stu_data();
+            default : 
+            if(option < 0 || option > 3)
             {
-                printf("\nPlease Enter Valid Choice! or ShutDown me!\n");
+            printf("\nPlease Enter Valid Choice! or ShutDown me!\n");
             }
         }
-    }
-    while(option != 0 );
+    }while(option != 0 );
 
     printf("\nGood Bye Sir... Miss You :')\n");
     return 0;
