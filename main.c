@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h> // For systeminfo command
+
 #include <time.h>
 
 // Login System
@@ -824,6 +824,5 @@ int main()
     printf("\nGood Bye Sir... Miss You :')\n");
     printf("\n");
     printf("\nShutting down...\n");
-    Sleep(2000); // Pause for 2 seconds
     return 0;
 }
