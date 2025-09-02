@@ -767,18 +767,19 @@ void search_student()
     printf("Enter student ID to search: ");
     scanf("%d", &search_id);
 
-    /*
+    
     // Skip header lines
     fgets(line, sizeof(line), file);
     fgets(line, sizeof(line), file);
-    */
+    
 
     // prottek line read korbe and check korbe id match kore kina
 
     while (fgets(line, sizeof(line), file) != NULL)
     {
         database std;
-        sscanf(line, "%d %s %f %f %s", &std.ID, std.name, &std.attendance, &std.avg_marks, std.grade); // sscanf string ney and parse kore
+sscanf(line, "%d %49[^0-9] %f %f %2s", &std.ID, std.name, &std.attendance, &std.avg_marks, std.grade); // [^0-9] eta elta negated character set। er mane, 0–9 songkha na howa porjonnto sob character porbe
+ // sscanf string ney and parse kore
         if (std.ID == search_id)
         {
             printf("Student found:\n");
