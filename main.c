@@ -2,8 +2,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <windows.h> // For systeminfo command
 #include <time.h>
+
 
 // Login System
 int login();
@@ -429,18 +430,21 @@ void read_file()
     FILE *fp;
 
     printf("Enter the file name you want to open : ");
+    printf("\n");
     getchar(); // consume leftover newline
     fgets(filename, sizeof(filename), stdin);
-    filename[strcspn(filename, "\n")] = 0; // remove newline character
+    strtok(filename, "\n");
 
     fp = fopen(filename, "r");
     if (fp == NULL)
     {
-        printf("File not found\n");
+        printf("\nFile not found\n");
         return;
     }
+    printf("\n");
 
     printf("\n==== File Content ====\n");
+    printf("\n");
 
     while ((ch = fgetc(fp)) != EOF)
     {
@@ -451,6 +455,40 @@ void read_file()
     printf("\n==== End of File ====\n");
     return;
 }
+
+void readfile()
+
+{
+    int choice;
+    char filename[50], ch;
+    FILE *fp;
+
+    printf("Enter the file name you want to open : ");
+    printf("\n");
+    fgets(filename, sizeof(filename), stdin);
+    strtok(filename, "\n");
+
+    fp = fopen(filename, "r");
+    if (fp == NULL)
+    {
+        printf("\nFile not found\n");
+        return;
+    }
+    printf("\n");
+
+    printf("\n==== File Content ====\n");
+    printf("\n");
+
+    while ((ch = fgetc(fp)) != EOF)
+    {
+        putchar(ch);
+    }
+    fclose(fp);
+    printf("\n");
+    printf("\n==== End of File ====\n");
+    return;
+}
+
 
 void append_file()
 {
@@ -506,7 +544,7 @@ void note_pad()
             write_file();
             break;
         case 2:
-            read_file();
+            readfile();
             break;
         case 3:
             append_file();
@@ -825,5 +863,7 @@ int main()
     printf("\nGood Bye Sir... Miss You :')\n");
     printf("\n");
     printf("\nShutting down...\n");
+
+    Sleep(2000); // Pause for 2 seconds
     return 0;
 }
