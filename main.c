@@ -429,8 +429,9 @@ void read_file()
     FILE *fp;
 
     printf("Enter the file name you want to open : ");
+    getchar(); // consume leftover newline
     fgets(filename, sizeof(filename), stdin);
-    filename[strcspn(filename, "\n")] = 0;
+    filename[strcspn(filename, "\n")] = 0; // remove newline character
 
     fp = fopen(filename, "r");
     if (fp == NULL)
