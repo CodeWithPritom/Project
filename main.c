@@ -418,6 +418,27 @@ void write_file()
         fputc(ch, fp);
     }
     fclose(fp);
+
+    /**/
+    //character count all line and limit feature added by Pritom Bhowmik
+    int count = 0;
+    FILE *fp_read = fopen(filename, "r");
+    if (fp_read != NULL) {
+        int ch;
+        while ((ch = fgetc(fp_read)) != EOF) {
+            count++;
+        }
+        fclose(fp_read);
+    }
+    printf("\nYour file name : %s and character count : %d\n", filename, count);
+    if (count > 100)
+    {
+        // Warning Message
+        printf("\nYour file content : greater than 100 characters. You surpass your character limit\n");
+        return;
+    }
+
+    */
     printf("\n====Note saved====\n");
     logfiles(filename);
 }
@@ -442,6 +463,8 @@ void read_file()
         return;
     }
     printf("\n");
+
+
 
     printf("\n==== File Content ====\n");
     printf("\n");
