@@ -419,7 +419,7 @@ void write_file()
     }
     fclose(fp);
 
-    /**/
+    /*
     //character count all line and limit feature added by Pritom Bhowmik
     int count = 0;
     FILE *fp_read = fopen(filename, "r");
